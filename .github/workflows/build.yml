@@ -23,10 +23,10 @@ jobs:
     - name: Set Up MSVC Dev Cmd compiler paths
       uses: ilammy/msvc-dev-cmd@v1
 
-    - name: Fetch OBS Studio Dependencies
+        - name: Fetch OBS Studio Dependencies
       shell: powershell
       run: |
-        Invoke-WebRequest -Uri "https://github.com" -OutFile "obs-studio.zip"
+        Invoke-WebRequest -Uri "https://github.com/obsproject/obs-studio/releases/download/RELEASE_VERSION/obs-studio-RELEASE_VERSION-win64.zip" -OutFile "obs-studio.zip"
         Expand-Archive -Path "obs-studio.zip" -DestinationPath "obs-deps"
 
     - name: Run Build Execution Engine
