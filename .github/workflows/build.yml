@@ -24,31 +24,31 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1
 
     - name: Fetch OBS Studio Dependencies
-  shell: powershell
-  run: |
-    $maxRetries = 3
-    $retryCount = 0
-    $success = $false
-    
-    while ($retryCount -lt $maxRetries -and -not $success) {
-      try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
-        Invoke-WebRequest -Uri "https://github.com/obsproject/obs-studio/releases/download/30.0.0/obs-studio-30.0.0-x64.zip" -OutFile "obs-studio.zip" -TimeoutSec 60
-        Expand-Archive -Path "obs-studio.zip" -DestinationPath "obs-deps"
-        $success = $true
-        Write-Host "Successfully downloaded and extracted OBS dependencies"
-      }
-      catch {
-        $retryCount++
-        if ($retryCount -lt $maxRetries) {
-          Write-Host "Download attempt $retryCount failed. Retrying in 10 seconds..."
-          Start-Sleep -Seconds 10
+      shell: powershell
+      run: |
+        $maxRetries = 3
+        $retryCount = 0
+        $success = $false
+        
+        while ($retryCount -lt $maxRetries -and -not $success) {
+          try {
+            [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+            Invoke-WebRequest -Uri "https://github.com/obsproject/obs-studio/releases/download/30.0.0/obs-studio-30.0.0-x64.zip" -OutFile "obs-studio.zip" -TimeoutSec 60
+            Expand-Archive -Path "obs-studio.zip" -DestinationPath "obs-deps"
+            $success = $true
+            Write-Host "Successfully downloaded and extracted OBS dependencies"
+          }
+          catch {
+            $retryCount++
+            if ($retryCount -lt $maxRetries) {
+              Write-Host "Download attempt $retryCount failed. Retrying in 10 seconds..."
+              Start-Sleep -Seconds 10
+            }
+            else {
+              throw "Failed to download OBS dependencies after $maxRetries attempts: $_"
+            }
+          }
         }
-        else {
-          throw "Failed to download OBS dependencies after $maxRetries attempts: $_"
-        }
-      }
-    }
 
     - name: Run Build Execution Engine
       shell: cmd
